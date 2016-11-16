@@ -1,0 +1,16 @@
+//CSDID@@  JOB NOTIFY=&SYSUID
+//*
+//ID@@GRP   EXEC  PGM=DFHCSDUP
+//STEPLIB   DD    DISP=SHR,DSN=@cics_hlq@.SDFHLOAD
+//DFHCSD    DD    DISP=SHR,DSN=@cics_csd@
+//SYSPRINT  DD    SYSOUT=*,DCB=(BLKSIZE=133)
+//SYSIN     DD    DISP=SHR,DSN=@zuid_source@(ID@@)
+//*
+//ZUIDLIST  EXEC  PGM=DFHCSDUP
+//STEPLIB   DD    DISP=SHR,DSN=@cics_hlq@.SDFHLOAD
+//DFHCSD    DD    DISP=SHR,DSN=@cics_csd@
+//SYSPRINT  DD    SYSOUT=*,DCB=(BLKSIZE=133)
+//SYSIN     DD    *
+ ADD GROUP(ID@@) LIST(@csd_list@)
+/*
+//
