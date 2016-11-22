@@ -57,34 +57,34 @@ to configure the JCL and source to help match your installation standards. The f
 description of each configuration item. Comments are denoted by leading asterisk in the first word. The first word is
 the configuration item and the second word is its value.
 
-  1. **@auth@** is the value of the AUTHENTICATE parameter for the https TCPIPService definition. The values can be
-  NO, ASSERTED, AUTOMATIC, AUTOREGISTER, BASIC, CERTIFICATE.
+    1. **@auth@** is the value of the AUTHENTICATE parameter for the https TCPIPService definition. The values can be
+    NO, ASSERTED, AUTOMATIC, AUTOREGISTER, BASIC, CERTIFICATE.
 
-  1. **@certficate@** is for CERTIFICATE parameter in the TCPIPService definition for https. Specify certificate as
-  CERTIFICATE(server-ssl-certificate-name).
+    1. **@certficate@** is for CERTIFICATE parameter in the TCPIPService definition for https. Specify certificate as
+    CERTIFICATE(server-ssl-certificate-name).
 
-  1. **@cics_csd@** is the dataset name of the CICS system definition (CSD) file.
+    1. **@cics_csd@** is the dataset name of the CICS system definition (CSD) file.
 
-  1. **@cics_hlq@** is the high level qualifier for CICS datasets.
+    1. **@cics_hlq@** is the high level qualifier for CICS datasets.
 
-  1. **@csd_list@** is the CSD group list name. This is the list name to use for the ZUID group.
+    1. **@csd_list@** is the CSD group list name. This is the list name to use for the ZUID group.
 
-  1. **@http_port@** is the http port number to be used for ZUID.
+    1. **@http_port@** is the http port number to be used for ZUID.
 
-  1. **@https_port@** is the https port number to be used for ZUID.
+    1. **@https_port@** is the https port number to be used for ZUID.
 
-  1. **@job_parms@** are the parameters following the JOB in the JOB card. Be mindful. This substitution will only
-  handle one line worth of JOB parameters when customizing jobs.
+    1. **@job_parms@** are the parameters following the JOB in the JOB card. Be mindful. This substitution will only
+    handle one line worth of JOB parameters when customizing jobs.
 
-  1. **@proc_lib@** (Optional) is the dataset containing the customized version of the DFHEITAL proc supplied by IBM.
-  If you plan to use the supplied assembly job, the proc library is required.
+    1. **@proc_lib@** (Optional) is the dataset containing the customized version of the DFHEITAL proc supplied by IBM.
+    If you plan to use the supplied assembly job, the proc library is required.
 
-  1. **@program_lib@** (Optional) is the dataset to be used for zUID programs. If you plan to use the supplied assembly
-  job, the program load library is required.
+    1. **@program_lib@** (Optional) is the dataset to be used for zUID programs. If you plan to use the supplied assembly
+    job, the program load library is required.
 
-  1. **@source_lib@** is the dataset containing zUID source code.
+    1. **@source_lib@** is the dataset containing zUID source code.
 
-  1. **@tdq@** is the transient data queue (TDQ) for error messages. Must be 4 bytes.
+    1. **@tdq@** is the transient data queue (TDQ) for error messages. Must be 4 bytes.
 
 1. Exit and save the CONFIG member in the source library.
 
@@ -92,24 +92,24 @@ the configuration item and the second word is its value.
 libraries. Because this job performs the customization, it will need to be customized in order to run. The following
 customizations will need to be made.
 
-  1. Modify JOB card to meet your system installation standards.
+    1. Modify JOB card to meet your system installation standards.
 
-  1. Change all occurrences of the following.
-    1. **@source_lib@** to the source library dataset name. Example. C ALL @source_lib@ CICSTS.ZUID.SOURCE
-    1. **@jcl_lib@** to this JCL library dataset name. Example. C ALL @jcl_lib@ CICSTS.ZUID.CNTL
+    1. Change all occurrences of the following.
+        1. **@source_lib@** to the source library dataset name. Example. C ALL @source_lib@ CICSTS.ZUID.SOURCE
+        1. **@jcl_lib@** to this JCL library dataset name. Example. C ALL @jcl_lib@ CICSTS.ZUID.CNTL
 
 1. Submit the CONFIG job. It should complete with return code 0. The remaining jobs and CSD definitions have been
 customized.
 
 1. Assemble the source (Optional). An assembly and link job has been provided to assemble the programs used for ZUID.
-  1. Using ASMZUID. The provided job ASMZUID utilizes the DFHEITAL proc from IBM for tranlating CICS commands. The
-  DFHEITAL proc must be customized and available in the library specified earlier in the @proc_lib@ configuration item.
-  Submit the ASMZUID job. It should end with return code 0.
-  1. Using your own assembly and link jobs. If you wish to use your own assembly jobs, here is a list of programs and
-  which require the CICS translator.
-    1. ZUIDPLT (requires CICS translator)
-    1. ZUIDSTCK
-    1. ZUID001 (requires CICS translator)
+    1. Using ASMZUID. The provided job ASMZUID utilizes the DFHEITAL proc from IBM for tranlating CICS commands. The
+    DFHEITAL proc must be customized and available in the library specified earlier in the @proc_lib@ configuration item.
+    Submit the ASMZUID job. It should end with return code 0.
+    1. Using your own assembly and link jobs. If you wish to use your own assembly jobs, here is a list of programs and
+    which require the CICS translator.
+        1. ZUIDPLT (requires CICS translator)
+        1. ZUIDSTCK
+        1. ZUID001 (requires CICS translator)
 
 1. Define the CICS resource definitions for zUID. In the JCL library, submit the CSDZUID member. This will install the
 minimum number of definitions for ZUID.
@@ -139,14 +139,14 @@ While some parts of the job are customized, some parameters are left untouched s
 instance is repeatable. Keep in mind, you will want some method of keeping track of your clients and which instance of
 zUID you have created for them. Recording the path as well is a good idea. Edit CSDID@@ in the JCL library and
 customize the following fields.
-  1. **@grp_list@** is the CSD group list you wish this instance to be installed.
-  1. **@path@** is the path of the zUID instance in the URIMAP definition. It is recommended you prefix the path for all
-  instance of zUID to identify the type of service. In the supplied example, the path is prefixed with rzressUID. You
-  may want addtional attributes in the path to further organize the services. The last part of the path is generally the
-  application name.
-  1. **@tran@** is the transaction ID to use for the service. Each instance should get its own transaction ID to provide
-  metering capability in relation to the client and their application. The transaction ID is also used as the CSD group
-  name by default. This is to aid portability should you decide to move the service.
+    1. **@grp_list@** is the CSD group list you wish this instance to be installed.
+    1. **@path@** is the path of the zUID instance in the URIMAP definition. It is recommended you prefix the path for all
+    instance of zUID to identify the type of service. In the supplied example, the path is prefixed with rzressUID. You
+    may want addtional attributes in the path to further organize the services. The last part of the path is generally the
+    application name.
+    1. **@tran@** is the transaction ID to use for the service. Each instance should get its own transaction ID to provide
+    metering capability in relation to the client and their application. The transaction ID is also used as the CSD group
+    name by default. This is to aid portability should you decide to move the service.
 
 1. Submit the CSDID@@ job to define the instance.
 
