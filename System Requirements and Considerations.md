@@ -1,8 +1,6 @@
 # System Requirements and Considerations
 
-The following information covers the basic requirements and configuration items that must be considered for hosting this service. Specific 
-
-configuration values will vary from user ot user, so many of these items reflect areas of focus and general guidelines for implementation.
+The following information covers the basic requirements and configuration items that must be considered for hosting this service. Specific configuration values will vary from user ot user, so many of these items reflect areas of focus and general guidelines for implementation.
 
 ## Minimum Requirements
 
@@ -16,9 +14,7 @@ The following items represent the barest minimum of requirements to run the zUID
 
 ## Recommended Requirements
 
-In order to get the most out of this service, we strongly recommend setting up your hosting environment to be elastic and highly-available. This 
-
-includes:
+In order to get the most out of this service, we strongly recommend setting up your hosting environment to be elastic and highly-available. This includes:
 
 - Setting up clusters of CICS regions (with multi-tenant hosting)
 - Enable WLM-managed Dynamic Sysplex Distribution
@@ -27,9 +23,7 @@ includes:
 
 ## Configuration Items
 
-Particular configuration values that need to be reviewed and adjusted for your expected usage include the following items. These settings are 
-
-complementary, and must be considered in unison.
+Particular configuration values that need to be reviewed and adjusted for your expected usage include the following items. These settings are complementary, and must be considered in unison.
 
 ### CICS
 
@@ -58,9 +52,7 @@ In addition to the previous settings, these items should be reviewed for applica
 
 ## Additional Info
 
-Most of these configuration considerations are covered in a bit more detail in a couple of Redbooks published by IBM in collaboration with the 
-
-Walmart SMEs. Please refer to these publications for additional information:
+Most of these configuration considerations are covered in a bit more detail in a couple of Redbooks published by IBM in collaboration with the Walmart SMEs. Please refer to these publications for additional information:
 
 #### Creating IBM z/OS Cloud Services
 http://www.redbooks.ibm.com/redbooks/pdfs/sg248324.pdf
