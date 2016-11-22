@@ -166,7 +166,7 @@ SY_LOG   DS   0H                                                        00015900
          STH   R1,TD_LEN               Save TD Message length
          ST    R1,WTO_LEN              WTO length
 *
-         EXEC CICS WRITEQ TD QUEUE('ALOG') FROM(TD_DATA)               X
+         EXEC CICS WRITEQ TD QUEUE('@tdq@') FROM(TD_DATA)               X
                LENGTH(TD_LEN) NOHANDLE
 *
          EXEC CICS WRITEQ TD QUEUE('CSSL') FROM(TD_DATA)               X
