@@ -139,14 +139,12 @@ While some parts of the job are customized, some parameters are left untouched s
 instance is repeatable. Keep in mind, you will want some method of keeping track of your clients and which instance of
 zUID you have created for them. Recording the path as well is a good idea. Edit CSDID@@ in the JCL library and
 customize the following fields.
+    1. **@appname@** is the application name using this instance of ZUID. It is the third node of the path.
     1. **@grp_list@** is the CSD group list you wish this instance to be installed.
-    1. **@path@** is the path of the zUID instance in the URIMAP definition. It is recommended you prefix the path for all
-    instance of zUID to identify the type of service. In the supplied example, the path is prefixed with rzressUID. You
-    may want addtional attributes in the path to further organize the services. The last part of the path is generally the
-    application name.
-    1. **@tran@** is the transaction ID to use for the service. Each instance should get its own transaction ID to provide
-    metering capability in relation to the client and their application. The transaction ID is also used as the CSD group
-    name by default. This is to aid portability should you decide to move the service.
+    1. **@id@** is the two character ZECS instance identifier ranging from 00 to ZZ.
+    1. **@org@** is the organization identifier used in the path of the service.
+    1. **scheme** is the setting for the SCHEME parameter on the URIMAP definition. Use either http or https.
+    *Note: the path is created by the @org@ and @appname@ values; /uid/@org@/@appname@.*
 
 1. Submit the CSDID@@ job to define the instance.
 
