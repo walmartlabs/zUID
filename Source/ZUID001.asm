@@ -1,23 +1,20 @@
 *                                                                       00010042
 *  PROGRAM:    ZUID001                                                  00020042
-*  AUTHOR:     Rich Jackson, Kevin Charles and Randy Frerking           00030042
-*  SOURCE:     J1FRERK.CICS.ZUID(ZUID001)                               00040042
+*  AUTHOR:     Rich Jackson and Randy Frerking                          00030079
 *  DATE:       April 1, 2014                                            00050042
-*  COMMENTS:   Enterprise Services Suite Unique Identifier creation.    00060042
+*  COMMENTS:   z/OS Unique Identifier service.                          00060079
 *                                                                       00070042
 *                                                                       00080042
-*  2014/04/01  J1FRERK - Created                                        00090042
-*  2014/06/18  J1FRERK - Enable access via LINK                         00091057
-*  2014/06/27  J1FRERK - Replace ABSTIME with STCKE                     00092065
-*  2014/07/28  J1FRERK - Create Access-Control-Allow-Origin header      00093068
-*                                                                       00100042
 *********************************************************************** 00110042
 * Dynamic Storage Area (Start)                                        * 00120042
 *********************************************************************** 00130042
 DFHEISTG DSECT                                                          00140042
 W_STCKE  DS    CL16               Absolute time - UTC STCKE TOD         00170065
 *                                                                       00180042
-W_ID     DS   0F                                                        00190042
+         DS   0F                                                        00181073
+W_STCODE DS    CL02               Transaction start code                00190073
+*                                                                       00190173
+W_ID     DS   0F                                                        00190273
 W_PLEX   DS    CL04               z/OS Sysplex ID                       00191043
 W_ABS_E  DS    CL08               Absolute time - STCKE                 00240065
 W_NC     DS    CL04               Named Counter value - fullword        00250053
@@ -95,7 +92,7 @@ ZUID001  AMODE 31                                                       00420042
 ZUID001  RMODE 31                                                       00430042
          B     SYSDATE                 BRANCH AROUND LITERALS           00440042
          DC    CL08'ZUID001  '                                          00450042
-         DC    CL48' -- Enterprise Services Suite Unique Identifier '   00460042
+         DC    CL48' -- z/OS Unique Identifier Service'                 00460079
          DC    CL08'        '                                           00470042
          DC    CL08'&SYSDATE'                                           00480042
          DC    CL08'        '                                           00490042
@@ -166,6 +163,9 @@ SY_0040  DS   0H                                                        00796242
                WRAP                                                    X00797342
                NOHANDLE                                                 00798042
 *                                                                       00798153
+         OC    EIBRESP,EIBRESP         Zero return code?                00798277
+         BC    B'0111',ER_503          ... no,  reject the request      00798377
+*                                                                       00798477
          MVC   W_NC,D_NC+4             Only use first fullword          00799053
 *********************************************************************** 00799842
 * Get Sysplex ID.                                                     * 00799942
@@ -373,58 +373,101 @@ PC_0020  DS   0H                                                        00851757
          CLC   CA_FORM(3),C_ESS+15     ESS  format request?             00852458
          BC    B'1000',PC_0030         ... yes, continue process        00852557
 *                                                                       00852657
-         MVC   CA_SC,=C'415'           Move status code 415             00852761
-         MVC   CA_RC,=C'01'            Move reason code  01             00852861
-         MVC   CA_PGMID,=C'001'        Move program ID  001             00852957
-         BC    B'1111',RETURN          Return to calling program        00853057
-*********************************************************************** 00853158
-* Jump back into the UID creation process.                            * 00853258
+         XC    CA_UID,CA_UID           Null UID field                   00852776
+         MVC   CA_UID(32),C_415_M      Move status code 415 message     00852876
+         MVC   CA_SC,=C'415'           Move status code 415             00852961
+         MVC   CA_RC,=C'01'            Move reason code  01             00853061
+         MVC   CA_PGMID,=C'001'        Move program ID  001             00853157
+         BC    B'1111',RETURN          Return to calling program        00853257
 *********************************************************************** 00853358
-PC_0030  DS   0H                                                        00853458
-         BC    B'1111',SY_0040         Create UID                       00853558
-*********************************************************************** 00853658
-* Well, we're back.  Format the response and return to the calling    * 00853758
-* program.                                                            * 00853858
-*********************************************************************** 00853958
-PC_0090  DS   0H                                                        00854058
-         MVC   CA_SC,=C'200'           Move status code 200             00854161
-         MVC   CA_RC,=C'00'            Move reason code  00             00854261
-         MVC   CA_PGMID,=C'001'        Move program ID  001             00854358
-         XC    CA_UID,CA_UID           Clear UID                        00854458
-         LA    R15,CA_UID              Load target address              00854558
-         L     R1,S_LENGTH             Load target length               00854659
-         S     R1,=F'1'                Subtract 1 for MVC instruction   00854766
-         EX    R1,MVC_0090             Execute MVC instruction          00854859
-         BC    B'1111',RETURN          Return to calling program        00854958
-*                                                                       00855058
-MVC_0090 MVC   0(0,R15),0(R2)          Move UID to DFHCOMMAREA          00855158
+* Jump back into the UID creation process.                            * 00853458
+*********************************************************************** 00853558
+PC_0030  DS   0H                                                        00853658
+         BC    B'1111',SY_0040         Create UID                       00853758
+*********************************************************************** 00853858
+* Well, we're back.  Format the response and return to the calling    * 00853958
+* program.                                                            * 00854058
+*********************************************************************** 00854158
+PC_0090  DS   0H                                                        00854258
+         MVC   CA_SC,=C'200'           Move status code 200             00854361
+         MVC   CA_RC,=C'00'            Move reason code  00             00854461
+         MVC   CA_PGMID,=C'001'        Move program ID  001             00854558
+         XC    CA_UID,CA_UID           Clear UID                        00854658
+         LA    R15,CA_UID              Load target address              00854758
+         L     R1,S_LENGTH             Load target length               00854859
+         S     R1,=F'1'                Subtract 1 for MVC instruction   00854966
+         EX    R1,MVC_0090             Execute MVC instruction          00855059
+         BC    B'1111',RETURN          Return to calling program        00855158
 *                                                                       00855258
-*********************************************************************** 00855358
-* STATUS 400                                                          * 00855458
-**********************************************************************  00855558
-ER_400   DS   0H                                                        00855658
-         LA    R2,C_400_T              Load 400 error text              00855758
-         MVC   S_LENGTH,C_400_L        Move 400 error length            00855858
-         MVC   S_CODE,C_400            Move status code                 00855958
-         MVC   S_TEXT,C_400_T          Move status text                 00856058
-         MVC   S_TEXT_L,C_400_L        Move status text length          00856158
-         BAS   R14,SY_SEND             Send response                    00856258
-         BC    B'1111',RETURN          Return to CICS                   00856358
-*                                                                       00856458
-*********************************************************************** 00856542
-* STATUS 405                                                          * 00857042
+MVC_0090 MVC   0(0,R15),0(R2)          Move UID to DFHCOMMAREA          00855358
+*                                                                       00855458
+*********************************************************************** 00855558
+* STATUS 400                                                          * 00855658
+**********************************************************************  00855758
+ER_400   DS   0H                                                        00855858
+         LA    R2,C_400_T              Load 400 error text              00855958
+         MVC   S_LENGTH,C_400_L        Move 400 error length            00856058
+         MVC   S_CODE,C_400            Move status code                 00856158
+         MVC   S_TEXT,C_400_T          Move status text                 00856258
+         MVC   S_TEXT_L,C_400_L        Move status text length          00856358
+         BAS   R14,SY_SEND             Send response                    00856458
+         BC    B'1111',RETURN          Return to CICS                   00856558
+*                                                                       00856658
+*********************************************************************** 00856742
+* STATUS 405 (HTTP)                                                   * 00857072
 **********************************************************************  00858042
 ER_405   DS   0H                                                        00859042
-         LA    R2,C_405_T              Load 405 error text              00859147
-         MVC   S_LENGTH,C_405_L        Move 405 error length            00859247
-         MVC   S_CODE,C_405            Move status code                 00859347
-         MVC   S_TEXT,C_405_T          Move status text                 00859447
-         MVC   S_TEXT_L,C_405_L        Move status text length          00859547
-         BAS   R14,SY_SEND             Send response                    00859647
-         BC    B'1111',RETURN          Return to CICS                   00859747
-*                                                                       00859842
-*********************************************************************** 00859942
-* Define Constant                                                     * 00860042
+         EXEC CICS ASSIGN STARTCODE(W_STCODE)                           00859172
+         CLI   W_STCODE,C'U'           WEB request?                     00859272
+         BC    B'0111',ER_405PC        ... no,  invalid LINK request    00859372
+*                                                                       00859472
+         LA    R2,C_405_T              Load 405 error text              00859547
+         MVC   S_LENGTH,C_405_L        Move 405 error length            00859647
+         MVC   S_CODE,C_405            Move status code                 00859747
+         MVC   S_TEXT,C_405_T          Move status text                 00859847
+         MVC   S_TEXT_L,C_405_L        Move status text length          00859947
+         BAS   R14,SY_SEND             Send response                    00860047
+         BC    B'1111',RETURN          Return to CICS                   00860147
+*                                                                       00860272
+*********************************************************************** 00860372
+* STATUS 405 (LINK)                                                   * 00860472
+**********************************************************************  00860572
+ER_405PC DS   0H                                                        00860672
+         XC    CA_UID,CA_UID           Null UID field                   00860775
+         MVC   CA_UID(32),C_405_M      Move status code 405 message     00860875
+         MVC   CA_SC,=C'405'           Move status code 405             00860972
+         MVC   CA_RC,=C'01'            Move reason code  01             00861072
+         MVC   CA_PGMID,=C'001'        Move program ID  001             00861172
+         BC    B'1111',RETURN          Return to calling program        00861672
+*********************************************************************** 00861777
+* STATUS 503 (HTTP)                                                   * 00861877
+**********************************************************************  00861977
+ER_503   DS   0H                                                        00862077
+         EXEC CICS ASSIGN STARTCODE(W_STCODE)                           00862177
+         CLI   W_STCODE,C'U'           WEB request?                     00862277
+         BC    B'0111',ER_503PC        ... no,  invalid LINK request    00862377
+*                                                                       00862477
+         LA    R2,C_503_T              Load 405 error text              00862577
+         MVC   S_LENGTH,C_503_L        Move 405 error length            00862677
+         MVC   S_CODE,C_503            Move status code                 00862777
+         MVC   S_TEXT,C_503_T          Move status text                 00862877
+         MVC   S_TEXT_L,C_503_L        Move status text length          00862977
+         BAS   R14,SY_SEND             Send response                    00863077
+         BC    B'1111',RETURN          Return to CICS                   00863177
+*                                                                       00863277
+*********************************************************************** 00863377
+* STATUS 503 (LINK)                                                   * 00863477
+**********************************************************************  00863577
+ER_503PC DS   0H                                                        00863677
+         XC    CA_UID,CA_UID           Null UID field                   00863777
+         MVC   CA_UID(32),C_503_T      Move status code 503 message     00863877
+         MVC   CA_SC,=C'503'           Move status code 503             00863977
+         MVC   CA_RC,=C'01'            Move reason code  01             00864077
+         MVC   CA_PGMID,=C'001'        Move program ID  001             00864177
+         BC    B'1111',RETURN          Return to calling program        00864277
+*                                                                       00864377
+*********************************************************************** 00864477
+* Define Constant                                                     * 00865077
 *********************************************************************** 00870042
          DS   0F                                                        00880042
 U_CASE   DC    24CL01' '               Upper Case mask                  00890071
@@ -466,79 +509,94 @@ C_400_L  DC    F'32'                   Status length                    00930042
          DS   0F                                                        00931042
 C_405    DC    H'405'                  Status code                      00932042
          DS   0F                                                        00933042
-C_405_T  DC    CL16'Invalid Request '  Status text                      00934042
+C_405_T  DC    CL16'Invalid Request '  Status text HTTP                 00934074
          DC    CL16'Only GET Allowed'                                   00935042
-         DS   0F                                                        00935142
-C_405_L  DC    F'32'                   Status length                    00935242
-         DS   0F                                                        00935357
-C_409    DC    H'409'                  Status code                      00935457
-         DS   0F                                                        00935557
-C_415    DC    H'415'                  Status code                      00935657
-         DS   0F                                                        00935757
-NULLS    DC    32XL01'00'                                               00935857
-FOXES    DC    XL04'FFFFFFFF'                                           00935957
-         DS   0F                                                        00936067
-M_ACAO_L DC    F'01'                   HTTP Header message length       00936167
-         DS   0F                                                        00936267
-M_ACAO   DC    CL01'*'                 HTTP Header message              00936367
-         DS   0F                                                        00936467
-H_ACAO_L DC    F'27'                   HTTP Header length               00936569
-         DS   0F                                                        00936667
-H_ACAO   DC    CL16'Access-Control-A'  HTTP Header                      00936767
-         DC    CL11'llow-Origin'       ...  continued                   00936867
-         DS   0F                                                        00936967
-*                                                                       00937057
-*********************************************************************** 00937157
-* Translate table - Hex to Character                                  * 00937257
-*********************************************************************** 00937357
-         DS   0F                                                        00937457
-H_TO_C   DC    XL16'F0F1F2F3F4F5F6F7F8F9818283848586'       00-0F       00937550
-         DC    XL16'F1000000000000000000000000000000'       10-1F       00938042
-         DC    XL16'F2000000000000000000000000000000'       20-2F       00939042
-         DC    XL16'F3000000000000000000000000000000'       30-3F       00939142
-         DC    XL16'F4000000000000000000000000000000'       40-4F       00939242
-         DC    XL16'F5000000000000000000000000000000'       50-5F       00939342
-         DC    XL16'F6000000000000000000000000000000'       60-6F       00939442
-         DC    XL16'F7000000000000000000000000000000'       70-7F       00939542
-         DC    XL16'F8000000000000000000000000000000'       80-8F       00939642
-         DC    XL16'F9000000000000000000000000000000'       90-9F       00939742
-         DC    XL16'81000000000000000000000000000000'       A0-AF       00939850
-         DC    XL16'82000000000000000000000000000000'       B0-BF       00939950
-         DC    XL16'83000000000000000000000000000000'       C0-CF       00940050
-         DC    XL16'84000000000000000000000000000000'       D0-DF       00940150
-         DC    XL16'85000000000000000000000000000000'       E0-EF       00940250
-         DC    XL16'86000000000000000000000000000000'       F0-FF       00940350
-*                                                                       00940442
-*********************************************************************** 00940544
-* Translate table - Character to hex                                  * 00940644
-*********************************************************************** 00940744
-         DS   0F                                                        00940844
-C_TO_H   DC    XL16'00000000000000000000000000000000'       00-0F       00940944
-         DC    XL16'00000000000000000000000000000000'       10-1F       00941044
-         DC    XL16'00000000000000000000000000000000'       20-2F       00941144
-         DC    XL16'00000000000000000000000000000000'       30-3F       00941244
-         DC    XL16'00000000000000000000000000000000'       40-4F       00941344
-         DC    XL16'00000000000000000000000000000000'       50-5F       00941444
-         DC    XL16'00000000000000000000000000000000'       60-6F       00941544
-         DC    XL16'00000000000000000000000000000000'       70-7F       00941644
-         DC    XL16'00000000000000000000000000000000'       80-8F       00941744
-         DC    XL16'00000000000000000000000000000000'       90-9F       00941844
-         DC    XL16'00000000000000000000000000000000'       A0-AF       00941944
-         DC    XL16'00000000000000000000000000000000'       B0-BF       00942044
-         DC    XL16'001C2C3C4C5C6C7C8C9C000000000000'       C0-CF       00942152
-         DC    XL16'001D2D3D4D5D6D7D8D9D000000000000'       D0-DF       00942251
-         DC    XL16'001E2E3E4E5E6E7E8E9E000000000000'       E0-EF       00942351
-         DC    XL16'0F1F2F3F4F5F6F7F8F9F000000000000'       F0-FF       00942451
-*                                                                       00942544
-         DS   0F                                                        00942644
-*                                                                       00942744
-*********************************************************************** 00942844
-* Literal Pool                                                        * 00942944
-*********************************************************************** 00943044
-         LTORG                                                          00943144
-*                                                                       00943244
-         DS   0F                                                        00943344
-R0       EQU   0                                                        00944042
+         DS   0F                                                        00935172
+C_405_M  DC    CL16'Request TYPE mus'  Status text LINK                 00935274
+         DC    CL16't be LINK.      '                                   00935372
+         DS   0F                                                        00935472
+C_405_L  DC    F'32'                   Status length                    00935876
+         DS   0F                                                        00935976
+C_409    DC    H'409'                  Status code                      00936076
+         DS   0F                                                        00936176
+C_415    DC    H'415'                  Status code                      00936276
+         DS   0F                                                        00936376
+C_415_M  DC    CL16'Invalid FORMAT r'  Status text LINK                 00936476
+         DC    CL16'equested.       '                                   00936576
+*                                                                       00936677
+         DS   0F                                                        00936777
+C_503    DC    H'503'                  Status code                      00936877
+         DS   0F                                                        00936977
+C_503_T  DC    CL16'01-001 Named Cou'  Status text HTTP                 00937077
+         DC    CL16'nter unavailable'                                   00937177
+         DS   0F                                                        00937277
+C_503_L  DC    F'32'                   Status length                    00937677
+*                                                                       00937777
+         DS   0F                                                        00937876
+NULLS    DC    32XL01'00'                                               00937976
+FOXES    DC    XL04'FFFFFFFF'                                           00938076
+         DS   0F                                                        00938176
+M_ACAO_L DC    F'01'                   HTTP Header message length       00938276
+         DS   0F                                                        00938376
+M_ACAO   DC    CL01'*'                 HTTP Header message              00938476
+         DS   0F                                                        00938576
+H_ACAO_L DC    F'27'                   HTTP Header length               00938676
+         DS   0F                                                        00938776
+H_ACAO   DC    CL16'Access-Control-A'  HTTP Header                      00938876
+         DC    CL11'llow-Origin'       ...  continued                   00938976
+         DS   0F                                                        00939076
+*                                                                       00939176
+*********************************************************************** 00939276
+* Translate table - Hex to Character                                  * 00939376
+*********************************************************************** 00939476
+         DS   0F                                                        00939576
+H_TO_C   DC    XL16'F0F1F2F3F4F5F6F7F8F9818283848586'       00-0F       00939676
+         DC    XL16'F1000000000000000000000000000000'       10-1F       00939776
+         DC    XL16'F2000000000000000000000000000000'       20-2F       00939842
+         DC    XL16'F3000000000000000000000000000000'       30-3F       00939942
+         DC    XL16'F4000000000000000000000000000000'       40-4F       00940042
+         DC    XL16'F5000000000000000000000000000000'       50-5F       00940142
+         DC    XL16'F6000000000000000000000000000000'       60-6F       00940242
+         DC    XL16'F7000000000000000000000000000000'       70-7F       00940342
+         DC    XL16'F8000000000000000000000000000000'       80-8F       00940442
+         DC    XL16'F9000000000000000000000000000000'       90-9F       00940542
+         DC    XL16'81000000000000000000000000000000'       A0-AF       00940650
+         DC    XL16'82000000000000000000000000000000'       B0-BF       00940750
+         DC    XL16'83000000000000000000000000000000'       C0-CF       00940850
+         DC    XL16'84000000000000000000000000000000'       D0-DF       00940950
+         DC    XL16'85000000000000000000000000000000'       E0-EF       00941050
+         DC    XL16'86000000000000000000000000000000'       F0-FF       00941150
+*                                                                       00941242
+*********************************************************************** 00941344
+* Translate table - Character to hex                                  * 00941444
+*********************************************************************** 00941544
+         DS   0F                                                        00941644
+C_TO_H   DC    XL16'00000000000000000000000000000000'       00-0F       00941744
+         DC    XL16'00000000000000000000000000000000'       10-1F       00941844
+         DC    XL16'00000000000000000000000000000000'       20-2F       00941944
+         DC    XL16'00000000000000000000000000000000'       30-3F       00942044
+         DC    XL16'00000000000000000000000000000000'       40-4F       00942144
+         DC    XL16'00000000000000000000000000000000'       50-5F       00942244
+         DC    XL16'00000000000000000000000000000000'       60-6F       00942344
+         DC    XL16'00000000000000000000000000000000'       70-7F       00942444
+         DC    XL16'00000000000000000000000000000000'       80-8F       00942544
+         DC    XL16'00000000000000000000000000000000'       90-9F       00942644
+         DC    XL16'00000000000000000000000000000000'       A0-AF       00942744
+         DC    XL16'00000000000000000000000000000000'       B0-BF       00942844
+         DC    XL16'001C2C3C4C5C6C7C8C9C000000000000'       C0-CF       00942952
+         DC    XL16'001D2D3D4D5D6D7D8D9D000000000000'       D0-DF       00943051
+         DC    XL16'001E2E3E4E5E6E7E8E9E000000000000'       E0-EF       00943151
+         DC    XL16'0F1F2F3F4F5F6F7F8F9F000000000000'       F0-FF       00943251
+*                                                                       00943344
+         DS   0F                                                        00943444
+*                                                                       00943544
+*********************************************************************** 00943644
+* Literal Pool                                                        * 00943744
+*********************************************************************** 00943844
+         LTORG                                                          00943944
+*                                                                       00944044
+         DS   0F                                                        00944144
+R0       EQU   0                                                        00944242
 R1       EQU   1                                                        00945042
 R2       EQU   2                                                        00946042
 R3       EQU   3                                                        00947042

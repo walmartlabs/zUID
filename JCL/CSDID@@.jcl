@@ -12,9 +12,12 @@
 //            UNIT=VIO,SPACE=(80,(1000,1000)),
 //            DCB=(LRECL=80,RECFM=FB)
 //STRINGS  DD *
+* Path is created as follows /uid/@org@/@appname@
+ @appname@   sessionID
  @grp_list@  @csd_list@
- @path@      /rzressUID/myApplicationName
- @tran@      ID00
+ @id@        00
+ @org@       devops
+ @scheme@    http
 /*
 //SYSTSIN  DD *
  EXEC '@source_lib@(REXXREPL)'
