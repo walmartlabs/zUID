@@ -94,19 +94,4 @@ Refer to the [installation instructions](./Installation.md) for complete setup i
 ```
 
 
-# Contributors
 
-- **_Randy Frerking_**,	Walmart Stores Inc.
-- **_Rich Jackson_**, Walmart Stores Inc.
-- **_Michael Karagines_**, Walmart Stores Inc.
-- **_Trey Vanderpool_**, Walmart Stores Inc.
-
-# Additional Info
-
-Most of these configuration considerations are covered in a bit more detail in a couple of Redbooks published by IBM in collaboration with the Walmart SMEs. Please refer to these publications for additional information:
-
-### Creating IBM z/OS Cloud Services
-http://www.redbooks.ibm.com/redbooks/pdfs/sg248324.pdf
-
-### How Walmart Became a Cloud Services Provider with IBM CICS 
-http://www.redbooks.ibm.com/redbooks/pdfs/sg248347.pdf
