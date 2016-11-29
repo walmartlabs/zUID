@@ -1,4 +1,4 @@
-#Installation
+## Installation
 
 ### Installation prerequisite
 If you plan on using the supplied assembly and link job, you will need to customize the DFHEITAL proc from the CICS
@@ -7,8 +7,8 @@ http://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.3.0/com.ibm.cics.ts.appli
 
 ### Security ###
 The default CICS userid will need access to run each instance of the transaction ID. It is recommended a block of
-transactions be reserved for the service. The supplied definitions assume zUID transaction will begin with "ID" giving a
-range of ID00 to IDZZ.
+transactions be reserved for the service. The supplied definitions assume the zUID transactions will begin with "ID"
+giving a range of ID00 to IDZZ.
 
 For those implementations using https and a TCPIPService definition with the AUTHENTICATE parameter set to BASIC, the
 authenticated userid will also need access to the transaction.
@@ -22,7 +22,7 @@ port sharing.
 
 The port or ports reserved for this service are defined to a virtual IP address (VIPA) distribute statement (VIPADIST)
 and the port is defined as a shared port (SHAREP). Binding the port to the distributed VIPA is optional. With this
-arrangement, CICS regons are free to move around and supports more than one region on a LPAR.
+arrangement, CICS regions are free to move around and supports more than one region on a LPAR.
 
 The preferred approach is to use a unique host name per instance which will allow a single instance to be moved without
 affecting any other instances. The unique host names would be assigned to the VIPA distribute address assigned to the
@@ -50,7 +50,7 @@ need to have a record format of FB, a logical record length of 80 and be a datas
 
 1. FTP the JCL in the CNTL folder to the JCL library you have allocated.
 
-1. FTP the source code and definition in the source folder to the source library you have allocated.
+1. FTP the source code and definitions in the source folder to the source library you have allocated.
 
 1. *In the source library, locate the CONFIG member and edit it.* This file contains a list of configuration items used
 to configure the JCL and source to help match your installation standards. The file itself provides a brief
@@ -73,7 +73,7 @@ the configuration item and the second word is its value.
 
     1. **@https_port@** is the https port number to be used for ZUID.
 
-    1. **@job_parms@** are the parameters following the JOB in the JOB card. Be mindful. This substitution will only
+    1. **@job_parms@** are the parameters following JOB in the JOB card. Be mindful. This substitution will only
     handle one line worth of JOB parameters when customizing jobs.
 
     1. **@proc_lib@** (Optional) is the dataset containing the customized version of the DFHEITAL proc supplied by IBM.
@@ -101,7 +101,8 @@ customizations will need to be made.
 1. Submit the CONFIG job. It should complete with return code 0. The remaining jobs and CSD definitions have been
 customized.
 
-1. Assemble the source (Optional). An assembly and link job has been provided to assemble the programs used for ZUID.
+1. Assemble the source. An assembly and link job has been provided to assemble the programs used for ZUID. You may use
+the supplied job or use your own job.
     1. Using ASMZUID. The provided job ASMZUID utilizes the DFHEITAL proc from IBM for tranlating CICS commands. The
     DFHEITAL proc must be customized and available in the library specified earlier in the @proc_lib@ configuration item.
     Submit the ASMZUID job. It should end with return code 0.
@@ -134,10 +135,11 @@ instructions for PLT-program list table in IBM Knowledge Center for CICS.
 1. Invoke the ZUIDPLT program. This can be done by restarting the CICS region or by running the UPLT transaction in one
 of the CICS regions.
 
-1. Define an instance of ZUID. In the JCL library, the CSDID@@ member provides the JCL to define one instance of zUID.
+#### Define a ZUID instance
+1. Define an instance of ZUID. In the JCL library, the DEFID## member provides the JCL to define one instance of zUID.
 While some parts of the job are customized, some parameters are left untouched so the process on installing a zUID
 instance is repeatable. Keep in mind, you will want some method of keeping track of your clients and which instance of
-zUID you have created for them. Recording the path as well is a good idea. Edit CSDID@@ in the JCL library and
+zUID you have created for them. Recording the path as well is a good idea. Edit DEFID## in the JCL library and
 customize the following fields.
     1. **@appname@** is the application name using this instance of ZUID. It is the third node of the path.
     1. **@grp_list@** is the CSD group list you wish this instance to be installed.
@@ -146,7 +148,7 @@ customize the following fields.
     1. **scheme** is the setting for the SCHEME parameter on the URIMAP definition. Use either http or https.
     *Note: the path is created by the @org@ and @appname@ values; /uid/@org@/@appname@.*
 
-1. Submit the CSDID@@ job to define the instance.
+1. Submit the DEFID## job to define the instance.
 
 1. Install the ZUID CSD group. The CSD group name is the transaction ID. No job has been supplied to install the
 definitions. Install by cold starting CICS, using CICS Explorer, or using CEDA INSTALL.
