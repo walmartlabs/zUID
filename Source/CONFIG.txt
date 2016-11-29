@@ -8,7 +8,7 @@
 * @csd_list@    is the CSD group list name
 * @http_port@   is the http port number
 * @https_port@  is the https port number
-* @job_parms@   are the parms following the JOB in the JOB card
+* @job_parms@   are the parms following JOB in the JOB card
 * @proc_lib@    is the dataset containing the customized version
 *               of the DFHEITAL proc supplied by IBM
 * @program_lib@ is the dataset to be used for zUID programs

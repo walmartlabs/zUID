@@ -36,12 +36,12 @@
 //SYSUT2    DD DISP=SHR,DSN=@jcl_lib@(ASMZUID)
 //SYSIN     DD DUMMY
 //**********************************************************************
-//* Modify CSDID@@ JCL
+//* Modify DEFID## JCL
 //**********************************************************************
 //STEP03   EXEC PGM=IKJEFT1B,REGION=1024K
 //SYSPRINT DD SYSOUT=*
 //SYSTSPRT DD SYSOUT=*
-//INPUT    DD DISP=SHR,DSN=@jcl_lib@(CSDID@@)
+//INPUT    DD DISP=SHR,DSN=@jcl_lib@(DEFID##)
 //OUTPUT   DD DISP=(NEW,PASS),DSN=&&OUTPUT,
 //            UNIT=VIO,SPACE=(80,(1000,1000)),
 //            DCB=(LRECL=80,RECFM=FB)
@@ -50,12 +50,12 @@
  EXEC '@source_lib@(REXXREPL)'
 /*
 //**********************************************************************
-//* Replace CSDID@@ JCL
+//* Replace DEFID## JCL
 //**********************************************************************
 //STEP04    EXEC PGM=IEBGENER,REGION=1024K
 //SYSPRINT  DD SYSOUT=*
 //SYSUT1    DD DISP=(OLD,DELETE),DSN=&&OUTPUT
-//SYSUT2    DD DISP=SHR,DSN=@jcl_lib@(CSDID@@)
+//SYSUT2    DD DISP=SHR,DSN=@jcl_lib@(DEFID##)
 //SYSIN     DD DUMMY
 //**********************************************************************
 //* Modify CSDZUID JCL

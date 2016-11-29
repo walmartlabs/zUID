@@ -1,4 +1,4 @@
-//CSDID@@  JOB @job_parms@
+//DEFID##  JOB @job_parms@
 //**********************************************************************
 //* Customize and define one instance of zUID
 //**********************************************************************
@@ -7,7 +7,7 @@
 //CUSTOMIZ EXEC PGM=IKJEFT1B
 //SYSPRINT DD SYSOUT=*
 //SYSTSPRT DD SYSOUT=*
-//INPUT    DD DISP=SHR,DSN=@source_lib@(CSDID@@)
+//INPUT    DD DISP=SHR,DSN=@source_lib@(CSDID##)
 //OUTPUT   DD DISP=(NEW,PASS),DSN=&&CSDCMDS,
 //            UNIT=VIO,SPACE=(80,(1000,1000)),
 //            DCB=(LRECL=80,RECFM=FB)
