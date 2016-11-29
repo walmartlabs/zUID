@@ -1,4 +1,4 @@
-# Synopsis
+# zUID
 
 zUID is a cloud enabled service in the z/OS environment that generates a unique identifier using a specialized patent-pending algorithm. It is guaranteed to generate 100% unique identifiers until the year 34,000 without requiring a database system to manage.
 
