@@ -135,6 +135,7 @@ instructions for PLT-program list table in IBM Knowledge Center for CICS.
 1. Invoke the ZUIDPLT program. This can be done by restarting the CICS region or by running the UPLT transaction in one
 of the CICS regions.
 
+#### Define a ZUID instance
 1. Define an instance of ZUID. In the JCL library, the DEFID## member provides the JCL to define one instance of zUID.
 While some parts of the job are customized, some parameters are left untouched so the process on installing a zUID
 instance is repeatable. Keep in mind, you will want some method of keeping track of your clients and which instance of
