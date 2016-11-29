@@ -1,0 +1,29 @@
+* @auth@        is the value of the AUTHENTICATE parameter for
+*               the https definition
+* @certficate@  is for the CERTIFICATE parameter in the
+*               TCPIPService definition. Specify certificate as
+*               CERTIFICATE(server-ssl-certificate-name)
+* @cics_csd@    is the dataset name of the CICS CSD
+* @cics_hlq@    is the high level qualifier for CICS datasets
+* @csd_list@    is the CSD group list name
+* @http_port@   is the http port number
+* @https_port@  is the https port number
+* @job_parms@   are the parms following JOB in the JOB card
+* @proc_lib@    is the dataset containing the customized version
+*               of the DFHEITAL proc supplied by IBM
+* @program_lib@ is the dataset to be used for zUID programs
+* @source_lib@  is the dataset containing zUID source code. This lib.
+* @tdq@         is the TDQ for messages. Must be 4 bytes
+**********************************************************************
+ @auth@              NO
+ @certficate@
+ @cics_csd@          CICSTS52.CICS.DFHCSD
+ @cics_hlq@          CICSTS52.CICS
+ @csd_list@          DEFAULT
+ @http_port@         50300
+ @https_port@        50301
+ @job_parms@         MSGCLASS=R,NOTIFY=&SYSUID
+ @proc_lib@          CICSTS.CICS.PROCLIB
+ @program_lib@       CICSTS.CICS.LINKLIB
+ @source_lib@        CICSTS.ZUID.SOURCE
+ @tdq@               CSSL
