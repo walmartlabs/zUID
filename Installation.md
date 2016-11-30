@@ -108,12 +108,14 @@ the supplied job or use your own job.
     Submit the ASMZUID job. It should end with return code 0.
     1. Using your own assembly and link jobs. If you wish to use your own assembly jobs, here is a list of programs and
     which require the CICS translator.
-        1. ZUIDPLT (requires CICS translator)
-        1. ZUIDSTCK
-        1. ZUID001 (requires CICS translator)
+        1. ZUIDPLT  (requires CICS translator)
+        1. ZUIDSTCK (shared with ZFAM repository)
+        1. ZUID001  (requires CICS translator)
 
 1. Define the CICS resource definitions for zUID. In the JCL library, submit the CSDZUID member. This will install the
 minimum number of definitions for ZUID.
+*Note: one resource definition, the ZUIDSTCK program definition is shared with the ZFAM repository. This may lead to a
+duplicate program definition if both ZUID and ZFAM are installed in the same region and defined in different CSD groups.*
 
 1. Define the http port for zUID (optional). If you plan to use an existing http port (TCPIPService definition), you do
 not need to submit this job. If you would like to setup a http port specifically for zUID. Submit the CSDZUIDN member in
