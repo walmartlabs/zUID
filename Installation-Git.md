@@ -1,4 +1,5 @@
-## Installation
+## Installation-Git
+_Use these instructions if utilizing the z/OS Git client_
 
 ### Installation prerequisite
 If you plan on using the supplied assembly and link job, you will need to customize the DFHEITAL proc from the CICS
