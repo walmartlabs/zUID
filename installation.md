@@ -45,12 +45,12 @@ names would be the ones pointing to the VIPA distribute address on their respect
 ### Installation instructions
 1. Download the zUID repository to your local workstation.
 
-1. Allocate a JCL and source library on the mainframe. Both libraries will
+1. Allocate a JCL and all source libraries on the mainframe. All libraries will
 need to have a record format of FB, a logical record length of 80 and be a dataset type of PDS or PDSE.
 
-1. FTP the JCL in the CNTL folder to the JCL library you have allocated.
+1. FTP the JCL in the jcl folder to the JCL library you have allocated.
 
-1. FTP the source code and definitions in the source folder to the source library you have allocated.
+1. FTP the source code and definitions in the source folders to the source libraries you have allocated.
 
 1. *In the source library, locate the CONFIG member and edit it.* This file contains a list of configuration items used
 to configure the JCL and source to help match your installation standards. The file itself provides a brief
@@ -82,7 +82,17 @@ the configuration item and the second word is its value.
     1. **@program_lib@** (Optional) is the dataset to be used for zUID programs. If you plan to use the supplied assembly
     job, the program load library is required.
 
-    1. **@source_lib@** is the dataset containing zUID source code.
+    1. **@asm_lib@** is the dataset containing zUID HLASM source code.
+    
+    1. **@cbl_lib@** is the dataset containing zUID COBOL source code.
+    
+    1. **@exec_lib@** is the dataset containing zUID REXX and/or shell scripts.
+    
+    1. **@jcl_lib@** is the dataset containing zUID JCL jobs.
+    
+    1. **@rdo_lib@** is the dataset containing zUID RDO defs.
+    
+    1. **@txt_lib@** is the dataset containing zUID supplementarty text files.
 
     1. **@tdq@** is the transient data queue (TDQ) for error messages. Must be 4 bytes.
 
@@ -95,7 +105,11 @@ customizations will need to be made.
     1. Modify JOB card to meet your system installation standards.
 
     1. Change all occurrences of the following.
-        1. **@source_lib@** to the source library dataset name. Example. C ALL @source_lib@ CICSTS.ZUID.SOURCE
+        1. **@asm_lib@** to the source HLASM library dataset name. Example. C ALL @asm_lib@ CICSTS.ZUID.ASM
+        1. **@exec_lib@** to the script library dataset name. Example. C ALL @exec_lib@ CICSTS.ZUID.EXEC
+        1. **@jcl_lib@** to the source library dataset name. Example. C ALL @jcl_lib@ CICSTS.ZUID.JCL
+        1. **@rdo_lib@** to the RDO def library dataset name. Example. C ALL @rdo_lib@ CICSTS.ZUID.RDO
+        1. **@txt_lib@** to the supplementary text library dataset name. Example. C ALL @txt_lib@ CICSTS.ZUID.TXT
         1. **@jcl_lib@** to this JCL library dataset name. Example. C ALL @jcl_lib@ CICSTS.ZUID.CNTL
 
 1. Submit the CONFIG job. It should complete with return code 0. The remaining jobs and CSD definitions have been
