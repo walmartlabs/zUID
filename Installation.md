@@ -81,13 +81,13 @@ description of each configuration item. Comments are denoted by leading asterisk
     
     1. **@srclib_prfx@** is the (potentially multi-node) prefix to be used for the various source libraries of the product. This should follow your installation standards. It could be as simple as your TSO PROFILE PREFIX, or could be a multi-node qualifier that represents your team. Of course, standard [z/OS dataset naming constraints](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.idad400/name.htm) still apply. So, keep this to something <= 30 bytes/chars (including dot-separators) to avoid issues. We require up to 14 bytes/chars on the lower qualifier end to uniquely identify the various data stores.
     
-    1. **@source_vrsn@** is the version identifier to be used as the LLQ for the collection of source libraries associated with this version of the product. We generally follow [Semantic Versioning](http://semver.org/) guidelines, with an exception for allowing leading zeros in order to maintain consistency in the DSN LLQ format. The format of the version identifier that we'll follow for the foreseeable future is a 7-character node like V*vvrrpp* where:
+    1. **@source_vrsn@** is the version identifier to be used as the LLQ for the collection of source libraries associated with this version of the product. We generally follow [Semantic Versioning](http://semver.org/) guidelines, with an exception for allowing leading zeros on the individual version/release/patch nodes in order to maintain consistency in the DSN LLQ format. The format of the version identifier that we'll follow for the foreseeable future is a 7-character DSN node like V*vvrrpp* where:
     
       _vv_ - represents major versions (i.e. breaking or non-backwards-compatible changes)
       
-      _rr_ - represent minor releases (i.e. non-breaking or backwards-compatible feature changes)
+      _rr_ - represents minor releases (i.e. non-breaking or backwards-compatible feature changes)
       
-      _pp_ - represents patches (i.e. non-breaking  or backwards-compatible bug fixes)
+      _pp_ - represents patches (i.e. non-breaking or backwards-compatible bug fixes)
       
       For example, V010000 is the initial version... and V010100 would represent the next _release_ with non-breaking changes, or V010001 would represent a bug-fix on the original version.
 
