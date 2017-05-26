@@ -92,7 +92,7 @@ the configuration item and the second word is its value.
       
       _pp_ - represents patches (i.e. non-breaking  or backwards-compatible bug fixes)
       
-      For example, V010000 is the initial version... and V010100 will represent the next _release_ with non-breaking changes, or V010001 would represent a bug-fix on the original version.
+      For example, V010000 is the initial version... and V010100 would represent the next _release_ with non-breaking changes, or V010001 would represent a bug-fix on the original version.
 
     1. **@asm_lib@** is the dataset containing zUID HLASM source code.
     
