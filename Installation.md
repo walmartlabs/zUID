@@ -94,18 +94,6 @@ the configuration item and the second word is its value.
       
       For example, V010000 is the initial version... and V010100 would represent the next _release_ with non-breaking changes, or V010001 would represent a bug-fix on the original version.
 
-    1. **@asm_lib@** is the dataset containing zUID HLASM source code.
-    
-    1. **@cbl_lib@** is the dataset containing zUID COBOL source code.
-    
-    1. **@exec_lib@** is the dataset containing zUID REXX and/or shell scripts.
-    
-    1. **@jcl_lib@** is the dataset containing zUID JCL jobs.
-    
-    1. **@rdo_lib@** is the dataset containing zUID RDO defs.
-    
-    1. **@txt_lib@** is the dataset containing zUID supplementarty text files.
-
     1. **@tdq@** is the transient data queue (TDQ) for error messages. Must be 4 bytes.
 
 1. Exit and save the CONFIG member in the source library.
@@ -117,12 +105,8 @@ customizations will need to be made.
     1. Modify JOB card to meet your system installation standards.
 
     1. Change all occurrences of the following.
-        1. **@asm_lib@** to the source HLASM library dataset name. Example. C ALL @asm_lib@ CICSTS.ZUID.ASM
-        1. **@exec_lib@** to the script library dataset name. Example. C ALL @exec_lib@ CICSTS.ZUID.EXEC
-        1. **@jcl_lib@** to the source library dataset name. Example. C ALL @jcl_lib@ CICSTS.ZUID.JCL
-        1. **@rdo_lib@** to the RDO def library dataset name. Example. C ALL @rdo_lib@ CICSTS.ZUID.RDO
-        1. **@txt_lib@** to the supplementary text library dataset name. Example. C ALL @txt_lib@ CICSTS.ZUID.TXT
-        1. **@jcl_lib@** to this JCL library dataset name. Example. C ALL @jcl_lib@ CICSTS.ZUID.CNTL
+        1. **@srclib_prfx@** is the (multi-node) prefix to be used for the various source libraries of the product. Example. C ALL @srclib_prfx@ CICSTS.ZUID
+        1. **@source_vrsn@** to the current version of the product source code. Example. C ALL @source_vrsn@ V010000
 
 1. Submit the CONFIG job. It should complete with return code 0. The remaining jobs and CSD definitions have been
 customized.
