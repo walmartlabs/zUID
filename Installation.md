@@ -45,17 +45,14 @@ names would be the ones pointing to the VIPA distribute address on their respect
 ### Installation instructions
 1. Download the zUID repository to your local workstation.
 
-1. Allocate all source libraries on the mainframe. All libraries will
+1. Allocate a source library on the mainframe for each folder in the repository. All libraries will
 need to have a record format of FB, a logical record length of 80 and be a dataset type of PDS or PDSE.
 
-1. FTP the JCL in the jcl folder to the JCL library you have allocated.
+1. FTP the contents of each project folder into the associated PDS/PDSE library you have allocated.
 
-1. FTP the source code and definitions in the source folders to the associated source libraries you have allocated.
-
-1. *In the TXT source library, locate the CONFIG member and edit it.* This file contains a list of configuration items used
+1. *In the TXT source PDS/PDSE library, locate the CONFIG member and edit it.* This file contains a list of configuration items used
 to configure the JCL and source to help match your installation standards. The file itself provides a brief
-description of each configuration item. Comments are denoted by leading asterisk in the first word. The first word is
-the configuration item and the second word is its value.
+description of each configuration item. Comments are denoted by leading asterisk in the first word. The first word in non-comment lines is the configuration item and the second word is its value.
 
     1. **@auth@** is the value of the AUTHENTICATE parameter for the https TCPIPService definition. The values can be
     NO, ASSERTED, AUTOMATIC, AUTOREGISTER, BASIC, CERTIFICATE.
@@ -82,7 +79,7 @@ the configuration item and the second word is its value.
     1. **@program_lib@** (Optional) is the dataset to be used for zUID programs. If you plan to use the supplied assembly
     job, the program load library is required.
     
-    1. **@srclib_prfx@** is the (multi-node) prefix to be used for the various source libraries of the product
+    1. **@srclib_prfx@** is the (potentially multi-node) prefix to be used for the various source libraries of the product. This should follow your installation standards. It could be as simple as your TSO PROFILE PREFIX, or could be a multi-node qualifier that represents your team. Of course, standard [z/OS dataset naming constraints](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.idad400/name.htm) still apply. So, keep this to something <= 30 bytes/chars (including dot-separators) to avoid issues. We require up to 14 bytes/chars on the lower qualifier end to uniquely identify the various data stores.
     
     1. **@source_vrsn@** is the version identifier to be used as the LLQ for the collection of source libraries associated with this version of the product. We generally follow [Semantic Versioning](http://semver.org/) guidelines, with an exception for allowing leading zeros in order to maintain consistency in the DSN LLQ format. The format of the version identifier that we'll follow for the foreseeable future is a 7-character node like V*vvrrpp* where:
     
