@@ -1,0 +1,77 @@
+/* rexx */
+/* trace r */
+CALL SYSCALLS('ON')
+parse UPPER arg dsnpfx semver
+Address Syscall 'pipe p.'    /* create a pipe */
+'ls -l */>&'||p.2            /* send command output to pipe */
+address syscall 'close' p.2  /* close pipe for output */
+address mvs 'execio * diskr' p.1 '(stem s.'  /* read pipe */
+say s.0
+do i = 1 to s.0 /* main loop */
+  if pos('/',s.i) > 0 then
+  do
+   tdir = strip(s.i,,':')
+   tdir = strip(tdir,,'/')
+   udir = translate(tdir)
+   pdsn = dsnpfx'.'udir'.'semver
+   call bpxwdyn "alloc fi(dd"i") da("pdsn") new catalog blksize(27920)",
+               "cyl space(2,1) lrecl(80) dsntype(library) recfm(f,b)",
+               "dsorg(po)"
+   call bpxwdyn "free fi(dd"i")"
+    flag = 0
+    k = i
+    do while flag = 0 /* flag loop */
+     k = k + 1
+     if k > s.0 then leave
+     if length(s.k) = 0 then
+      do
+        flag = 1
+        iterate
+      end
+      if substr(s.k,1,5) = 'total' then iterate
+      if pos('.',word(s.k,words(s.k))) > 0 then
+       do
+        fnm = strip(word(s.k,words(s.k)))
+        mnm = substr(fnm,1,(pos('.',fnm) - 1))
+        address syscall 'getcwd cwd'
+        fullPath = cwd||'/'tdir
+        ogcmd = "OGET '"fullPath"/"fnm"' '"pdsn"("mnm")'"
+        say ogcmd
+        address 'TSO' ogcmd
+       end
+    end /* end flag loop */
+  end /* end if for dir check */
+/*tdir = strip(word(s.i,words(s.i)),,'/')
+  udir = translate(tdir)
+  pdsn = dsnpfx'.'udir'.'semver
+  call bpxwdyn "alloc fi(dd"i") da("pdsn") new catalog blksize(27920)",
+               "cyl space(2,1) lrecl(80) dsntype(library) recfm(f,b)",
+               "dsorg(po)"
+     address syscall 'getcwd cwd'
+  fullPath = cwd||'/'tdir
+  address syscall 'chdir 'fullPath
+  Address Syscall 'pipe p.'
+  'ls -al ./>&'||p.2
+  address syscall 'close' p.2
+  address mvs 'execio * diskr' p.1 '(stem f.'
+    do x=1 to f.0
+    if pos(f.x,'.'tdir) > 0 then
+    do
+     fnm = strip(word(f.x,words(f.x)))
+     mnm = substr(fnm,1,pos(fnm,'.'))
+    end
+    address syscall
+    'close' p.1
+    end */
+    /*
+    address syscall 'getcwd cwd'
+    fullPath = cwd||'/'tdir
+     ogcmd = "OGETX '"fullPath"' '"pdsn"' LC SUFFIX"
+      say ogcmd
+     address 'TSO' ogcmd
+  call bpxwdyn "free fi(dd"i")"
+  */
+end /* end main loop */
+    address syscall
+    'close' p.1
+exit 0
