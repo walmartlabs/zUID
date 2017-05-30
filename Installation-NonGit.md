@@ -43,6 +43,8 @@ zuid01.sysplex01.enterprise-services.mycompany.com and zuid01.sysplex02.enterpri
 names would be the ones pointing to the VIPA distribute address on their respective sysplex.
 
 ### Installation instructions
+1. [Fork the repo](https://help.github.com/articles/fork-a-repo/) to your user account.
+
 1. Download the zUID repository to your local workstation.
 
 1. Allocate a source library on the mainframe for each folder in the repository. All libraries will
