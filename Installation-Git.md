@@ -54,7 +54,7 @@ _These instructions assume that you have the Git for z/OS client installed and c
 
         git clone git@github.com:YOURNAME/zUID.git
 
-1. You will now have a local project that contains an association to a remote named `origin`, which is your forked repo. In order to pull subsequent changes from the _original_ repo to your local project, an additional remote named `upstream` should be added to your project. Change into the working directory add the `upstream` remote:
+1. You will now have a local project that contains an association to a remote named `origin`, which is your forked repo. In order to pull subsequent changes from the _original_ repo to your local project, an additional remote named `upstream` should be added to your project. Change into the working directory and add the `upstream` remote:
 
         git remote add upstream git://github.com/walmart/zUID.git
 
