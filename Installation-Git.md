@@ -44,7 +44,13 @@ zuid01.sysplex01.enterprise-services.mycompany.com and zuid01.sysplex02.enterpri
 names would be the ones pointing to the VIPA distribute address on their respective sysplex.
 
 ### Installation instructions
-1. Download the zUID repository to your local workstation.
+_These instructions assume that you have the Git for z/OS client installed and configured on your system, and that SSH keys have been set up appropriately._
+
+1. [Fork the repo](https://help.github.com/articles/fork-a-repo/) to your user account.
+
+1. From z/OS, identify a directory in USS to house the project and navigate into it.
+
+1. Clone the project from your forked repo:
 
 1. Allocate a source library on the mainframe for each folder in the repository. All libraries will
 need to have a record format of FB, a logical record length of 80 and be a dataset type of PDS or PDSE.
