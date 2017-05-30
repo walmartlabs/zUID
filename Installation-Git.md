@@ -1,5 +1,5 @@
 ## Installation
-_Use these instructions if using Git to access/manage the source code_
+_Use these instructions if using Git for z/OS to access/manage the source code_
 
 ### Installation prerequisite
 If you plan on using the supplied assembly and link job, you will need to customize the DFHEITAL proc from the CICS
@@ -51,12 +51,15 @@ _These instructions assume that you have the Git for z/OS client installed and c
 1. From z/OS, identify a directory in USS to house the project and navigate into it.
 
 1. Clone the project from your forked repo:
+
         `git clone git@github.com:YOURNAME/zUID.git`
 
 1. You will now have a local project that contains an association to a remote named `origin`, which is your forked repo. In order to pull subsequent changes from the _original_ repo to your local project, an additional remote named `upstream` should be added to your project. Change into the working directory add the `upstream` remote:
+
         `git remote add upstream git://github.com/walmart/zUID.git`
 
 1. In the working directory, there is a script named `Git2zos.exec`. This script will create a PDSE associated with each folder in the working directory and copy the respective files into those PDSE's. To run the script, first identify the values to be used for **@srclib_prfx@** and **@source_vrsn@** (as described several bullets below). These values will be passed as arguments on the script invocation. _From within the working directory_, issue the command like so (the arguments are not case-sensitive):
+        
         `Git2zos.exec 'YOUR.SOURCELIB.PREFIX' 'V010000'`
 
 1. *In the TXT source PDS/PDSE library, locate the CONFIG member and edit it.* This file contains a list of configuration items used
