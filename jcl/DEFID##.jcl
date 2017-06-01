@@ -7,7 +7,8 @@
 //CUSTOMIZ EXEC PGM=IKJEFT1B
 //SYSPRINT DD SYSOUT=*
 //SYSTSPRT DD SYSOUT=*
-//INPUT    DD DISP=SHR,DSN=@source_lib@(CSDID##)
+//INPUT    DD DISP=SHR,
+//            DSN=@srclib_prfx@.@source_vrsn@.RDO(CSDID##)
 //OUTPUT   DD DISP=(NEW,PASS),DSN=&&CSDCMDS,
 //            UNIT=VIO,SPACE=(80,(1000,1000)),
 //            DCB=(LRECL=80,RECFM=FB)
@@ -20,7 +21,7 @@
  @scheme@    http
 /*
 //SYSTSIN  DD *
- EXEC '@source_lib@(REXXREPL)'
+ EXEC '@srclib_prfx@.EXEC.@source_vrsn@(REXXREPL)'
 /*
 //**********************************************************************
 //* Define the CSD definitions for one instance of zUID

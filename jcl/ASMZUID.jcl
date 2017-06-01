@@ -7,7 +7,8 @@
 //* Assemble and link ZUIDPLT
 //**********************************************************************
 //ZUIDPLT  EXEC DFHEITAL,PROGLIB=@program_lib@
-//TRN.SYSIN  DD DISP=SHR,DSN=@source_lib@(ZUIDPLT)
+//TRN.SYSIN  DD DISP=SHR,
+//              DSN=@srclib_prfx@.@source_vrsn@.ASM(ZUIDPLT)
 //*
 //LKED.SYSIN DD *
    NAME ZUIDPLT(R)
@@ -16,7 +17,8 @@
 //* Assemble and link ZUID001
 //**********************************************************************
 //ZUID001  EXEC DFHEITAL,PROGLIB=@program_lib@
-//TRN.SYSIN  DD DISP=SHR,DSN=@source_lib@(ZUID001)
+//TRN.SYSIN  DD DISP=SHR,
+//              DSN=@srclib_prfx@.@source_vrsn@.ASM(ZUID001)
 //*
 //LKED.SYSIN DD *
    NAME ZUID001(R)
@@ -35,7 +37,8 @@
 //            UNIT=SYSDA,DISP=(,PASS),
 //            SPACE=(400,(100,100))
 //SYSPRINT DD SYSOUT=*
-//SYSIN    DD DISP=SHR,DSN=@source_lib@(ZUIDSTCK)
+//SYSIN    DD DISP=SHR,
+//            DSN=@srclib_prfx@.@source_vrsn@.ASM(ZUIDSTCK)
 //**********************************************************************
 //* Link-edit ZUIDSTCK
 //**********************************************************************

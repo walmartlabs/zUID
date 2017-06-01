@@ -13,7 +13,7 @@ do i = 1 to s.0 /* main loop */
    tdir = strip(s.i,,':')
    tdir = strip(tdir,,'/')
    udir = translate(tdir)
-   pdsn = dsnpfx'.'udir'.'semver
+   pdsn = dsnpfx'.'semver'.'udir
    call bpxwdyn "alloc fi(dd"i") da("pdsn") new catalog blksize(27920)",
                "cyl space(2,1) lrecl(80) dsntype(library) recfm(f,b)",
                "dsorg(po)"
