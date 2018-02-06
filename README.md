@@ -9,7 +9,7 @@ Service returns the UID in 3 different hex formats, plain, guid and ess in plain
 
 No authorization is needed for this service.
 
-In addition to being web enabled you can call this routine directly using a CICS LINK command in your COBOL programs. The HTTP interface was designed to make it available for more consumers outside the z/OS environment.
+In addition to being web enabled you can call this routine directly using a CICS LINK command in your COBOL programs. The HTTP interface was designed to make it available for more consumers out side the z/OS environment.
 
 ## About this project 
 
